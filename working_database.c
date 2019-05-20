@@ -59,6 +59,7 @@
                                to hospital */
 #define LEVEL_MAX 5         /* Max level of hospital, can be changed according
                                to hospital */
+#define KEY 'K'				/* Key for encrypting and decrypting data */
 /*******************************************************************************
 	Structures
 	Patient (array library)
@@ -135,11 +136,10 @@
 	void print_location();
 	void add_patient(patient_t patient_lib[], int count);
 	void display_patient(); 		     		  /* displays patient profile */
-	void encrypt(); 								/* encrypts database data */
-	void decrypt(); 								/* decrypts database data */
+	void encrypt_decrypt (patient_t patient_lib[], int count);/* encrypts or decrypts database data */
 	void compress(); 							  /* compresses database data */
 	void save_patient(patient_t patient_lib[], int count);/* saves database to text file */
-	int load_patient();						 /* loads database from text file */
+	int load_patient(patient_t patient_lib[], int count);/* loads database from text file */
 /*==============================================================================
 	Valid user input prototypes: Secondary prototypes for ensuring proper user
 	input.
@@ -192,10 +192,15 @@ int main(void)
                 break;
             case 5:
                 printf("Loading patient info...\n");
+                count = load_patient(patient_lib, count);
                 break;
             case 6:
                 printf("Exiting program...\n");
                 break;
+            case 7:
+            	printf("encrypting or decrypting data...\n");
+            	encrypt_decrypt(patient_lib, count); 
+            	break;  
             default:
                 printf("Invalid choice\n");
                 break;
@@ -227,7 +232,8 @@ void print_menu()
     "4. save the patients to the database file\n"
     "5. load the patients from the database file\n"
     "6. exit the program\n"
-    "Enter choice (number between 1-6)>\n");
+    "7. encrypt or decrypt data\n"
+    "Enter choice (number between 1-7)>\n");
 }
 
 void add_patient(patient_t patient_lib[], int count)
@@ -410,3 +416,150 @@ void save_patient (patient_t patient_lib[], int count)
     
 }
 
+/*******************************************************************************
+ * Read the database file and put the data into flights.
+ * 
+ * inputs:
+ * - flights[], flight_number
+ * outputs:
+ * - flight_number
+*******************************************************************************/
+int load_patient (patient_t patient_lib[], int count)
+{
+    int i = 0;
+
+    FILE* fp = NULL;
+
+    /* Opens textfile called database in write mode */
+    fp = fopen("database.txt", "r");
+
+    /* Exits the function if error occurs */
+    if (fp == NULL)
+    {
+        printf("Read error\n");
+        return count;
+    }
+
+    /* Saves number of patients */
+    fscanf(fp, "%d\r\n", &count);
+
+
+/* Loop for saving each flight stored */
+    for (i = 0; i < count; i++)
+    {
+    fscanf(fp, "%s ", patient_lib[i].surname);
+    fscanf(fp, "%s ", patient_lib[i].firstname);
+
+    fscanf(fp, "%d %d %d ", &patient_lib[i].age, 
+    						&patient_lib[i].weight, 
+    						&patient_lib[i].height);
+    
+    fscanf(fp, "%d %d %d %d %d ", &patient_lib[i].arrival_dt.day,
+                            	&patient_lib[i].arrival_dt.month,
+                            	&patient_lib[i].arrival_dt.year,
+                            	&patient_lib[i].arrival_dt.hour,
+                            	&patient_lib[i].arrival_dt.min);
+    
+    fscanf(fp, "%s ", patient_lib[i].location_dt.department);
+    fscanf(fp, "%d ", &patient_lib[i].location_dt.level);
+    fscanf(fp, "%d ", &patient_lib[i].location_dt.room);
+
+    fscanf(fp, "%d %d %d %d %d\r\n", &patient_lib[i].departure_dt.day,
+                            		&patient_lib[i].departure_dt.month,
+                            		&patient_lib[i].departure_dt.year,
+                            		&patient_lib[i].departure_dt.hour,
+                            		&patient_lib[i].departure_dt.min);
+
+	}
+
+    /* Closes text file */
+    fclose(fp);
+
+    /* Returns the number of flights added to the array */
+    return count;
+
+}
+
+
+/*******************************************************************************
+ * This function encrypts and decrypts the string from the text file
+ * 
+ * inputs:
+ * - 
+ * outputs:
+ * - none
+*******************************************************************************/
+void encrypt_decrypt (patient_t patient_lib[], int count)
+{
+	int i, j;
+
+
+	/* Declaring variable for string length */
+	int string_len;
+
+	/* XORs each of the bits of each character in the string/int data type 
+	with the key. A single character in ASCII can be represented in binary as 8 bits. */
+	for (i = 0; i < count; i++)
+	{
+		string_len = strlen(patient_lib[i].surname);
+		for (j = 0; j < string_len; j++)
+		{
+			patient_lib[i].surname[j] = patient_lib[i].surname[j] ^ KEY;
+		}
+
+
+		string_len = strlen(patient_lib[i].firstname);
+		for (j = 0; j < string_len; j++)
+		{
+			patient_lib[i].firstname[j] = patient_lib[i].firstname[j] ^ KEY;
+		}
+
+
+		patient_lib[i].age = patient_lib[i].age ^ KEY;
+		patient_lib[i].weight = patient_lib[i].weight ^ KEY;
+		patient_lib[i].height = patient_lib[i].height ^ KEY;
+
+		patient_lib[i].arrival_dt.day = patient_lib[i].arrival_dt.day ^ KEY;
+		patient_lib[i].arrival_dt.month = patient_lib[i].arrival_dt.month ^ KEY;
+		patient_lib[i].arrival_dt.year = patient_lib[i].arrival_dt.year ^ KEY;
+		patient_lib[i].arrival_dt.hour = patient_lib[i].arrival_dt.hour ^ KEY;
+		patient_lib[i].arrival_dt.min =  patient_lib[i].arrival_dt.min ^ KEY;
+
+
+		string_len = strlen(patient_lib[i].location_dt.department);
+		for (j = 0; j < string_len; j++)
+		{
+			patient_lib[i].location_dt.department[j] = 
+			patient_lib[i].location_dt.department[j] ^ KEY;
+		}
+
+
+		patient_lib[i].location_dt.level = 
+		patient_lib[i].location_dt.level ^ KEY;
+
+		patient_lib[i].location_dt.room =
+		patient_lib[i].location_dt.room ^ KEY;
+
+
+		patient_lib[i].departure_dt.day = 
+		patient_lib[i].departure_dt.day ^ KEY;
+
+		patient_lib[i].departure_dt.month =
+		patient_lib[i].departure_dt.month ^ KEY;
+
+		patient_lib[i].departure_dt.year =
+		patient_lib[i].departure_dt.year ^ KEY;
+
+		patient_lib[i].departure_dt.hour =
+		patient_lib[i].departure_dt.hour ^ KEY;
+
+		patient_lib[i].departure_dt.min = 
+		patient_lib[i].departure_dt.min ^ KEY;
+
+	}
+
+
+
+
+
+}
