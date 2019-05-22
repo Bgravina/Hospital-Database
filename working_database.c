@@ -79,7 +79,7 @@
 ==============================================================================*/
 	struct date_time
 	{
-		int month, day, year, hour, min;
+		int month, day, year, hour, minute;
 	};
 	typedef struct date_time date_time_t;
 /*==============================================================================
@@ -121,9 +121,6 @@
 		diagnosis_t diagnosis;
 	};
 	typedef struct patient patient_t;
-/*==============================================================================
-	location struct:
-==============================================================================*/
 /*******************************************************************************
 	Function Prototypes
 *******************************************************************************/
@@ -273,14 +270,14 @@ void add_patient(patient_t patient_lib[], int count)
                             &patient_lib[count].arrival_dt.month,
                             &patient_lib[count].arrival_dt.year,
                             &patient_lib[count].arrival_dt.hour,
-                            &patient_lib[count].arrival_dt.min);
+                            &patient_lib[count].arrival_dt.minute);
         printf("\nArrival information:\n");
         printf("Day: %d\nMonth: %d\nYear: %d\nHour: %d\nMinute: %d\n", 
 				patient_lib[count].arrival_dt.day,
                 patient_lib[count].arrival_dt.month,
  				patient_lib[count].arrival_dt.year,
 				patient_lib[count].arrival_dt.hour,
-				patient_lib[count].arrival_dt.min);
+				patient_lib[count].arrival_dt.minute);
 /*==============================================================================
 	Request patients location within hospital. This allows nurses to be aware
 	of where patients are located. This location will also be updatable.
@@ -335,7 +332,7 @@ void add_patient(patient_t patient_lib[], int count)
                             &patient_lib[count].departure_dt.month,
                             &patient_lib[count].departure_dt.year,
                             &patient_lib[count].departure_dt.hour,
-                            &patient_lib[count].departure_dt.min);
+                            &patient_lib[count].departure_dt.minute);
 
         printf("\nDeparture information:\n");
         printf("Day: %d\nMonth: %d\nYear: %d\nHour: %d\nMinute: %d\n", 
@@ -343,7 +340,7 @@ void add_patient(patient_t patient_lib[], int count)
                             patient_lib[count].departure_dt.month,
                             patient_lib[count].departure_dt.year,
                             patient_lib[count].departure_dt.hour,
-                            patient_lib[count].departure_dt.min);
+                            patient_lib[count].departure_dt.minute);
 	}
 	else if (strcmp(temp_YN, "NO") == 0)
 	{
@@ -397,7 +394,7 @@ void save_patient (patient_t patient_lib[], int count)
                             patient_lib[i].arrival_dt.month,
                             patient_lib[i].arrival_dt.year,
                             patient_lib[i].arrival_dt.hour,
-                            patient_lib[i].arrival_dt.min);
+                            patient_lib[i].arrival_dt.minute);
     
     fprintf(fp, "%s ", patient_lib[i].location_dt.department);
     fprintf(fp, "%d ", patient_lib[i].location_dt.level);
@@ -407,7 +404,7 @@ void save_patient (patient_t patient_lib[], int count)
                             		patient_lib[i].departure_dt.month,
                             		patient_lib[i].departure_dt.year,
                             		patient_lib[i].departure_dt.hour,
-                            		patient_lib[i].departure_dt.min);
+                            		patient_lib[i].departure_dt.minute);
 
 	}
 
@@ -458,7 +455,7 @@ int load_patient (patient_t patient_lib[], int count)
                             	&patient_lib[i].arrival_dt.month,
                             	&patient_lib[i].arrival_dt.year,
                             	&patient_lib[i].arrival_dt.hour,
-                            	&patient_lib[i].arrival_dt.min);
+                            	&patient_lib[i].arrival_dt.minute);
     
     fscanf(fp, "%s ", patient_lib[i].location_dt.department);
     fscanf(fp, "%d ", &patient_lib[i].location_dt.level);
@@ -468,7 +465,7 @@ int load_patient (patient_t patient_lib[], int count)
                             		&patient_lib[i].departure_dt.month,
                             		&patient_lib[i].departure_dt.year,
                             		&patient_lib[i].departure_dt.hour,
-                            		&patient_lib[i].departure_dt.min);
+                            		&patient_lib[i].departure_dt.minute);
 
 	}
 
@@ -523,7 +520,7 @@ void encrypt_decrypt (patient_t patient_lib[], int count)
 		patient_lib[i].arrival_dt.month = patient_lib[i].arrival_dt.month ^ KEY;
 		patient_lib[i].arrival_dt.year = patient_lib[i].arrival_dt.year ^ KEY;
 		patient_lib[i].arrival_dt.hour = patient_lib[i].arrival_dt.hour ^ KEY;
-		patient_lib[i].arrival_dt.min =  patient_lib[i].arrival_dt.min ^ KEY;
+		patient_lib[i].arrival_dt.min =  patient_lib[i].arrival_dt.minute ^ KEY;
 
 
 		string_len = strlen(patient_lib[i].location_dt.department);
@@ -554,12 +551,205 @@ void encrypt_decrypt (patient_t patient_lib[], int count)
 		patient_lib[i].departure_dt.hour ^ KEY;
 
 		patient_lib[i].departure_dt.min = 
-		patient_lib[i].departure_dt.min ^ KEY;
+		patient_lib[i].departure_dt.minute ^ KEY;
+	}
+/*******************************************************************************
+ * This function encrypts and decrypts the string from the text file
+ * 
+ * inputs:
+ * - 
+ * outputs:
+ * - none
+*******************************************************************************/
+int valid_ID(patient_t patient_lib[], int count)
+{
+    int lenID, valid_ID, i;
+ 	lenID = strlen(patient_lib[count].id);
 
+  	if((patient_lib[count].id[0] >= 'A')
+      &&(patient_lib[count].id[0] <= 'Z'))
+
+	for(i=1; i < lenID; i++)
+	{
+		if((patient_lib[count].surname[i] >= 0)
+         &&(patient_lib[count].surname[i] <= 1))
+      	{
+       		printf("valid input.\n");
+       		valid_ID = 1;
+      	}
+      	else
+      	{
+        	printf("invalid input.\n");
+        	valid_ID = 0;
+      	}
+	}
+	return valid_ID;
+}
+/*******************************************************************************
+ * This function encrypts and decrypts the string from the text file
+ * 
+ * inputs:
+ * - 
+ * outputs:
+ * - none
+*******************************************************************************/
+int valid_fullname(patient_t patient_lib[], int count)
+{
+    int i, j;
+    int lenS, lenF;
+    int valid_surname, valid_firstname, valid_fullname;
+
+  	lenS = strlen(patient_lib[count].surname);
+ 	lenF = strlen(patient_lib[count].firstname);
+
+  	for (i=0; i < lenS; i++)
+  	{
+      	if((patient_lib[count].surname[i] >= 'A')
+         &&(patient_lib[count].surname[i] <= 'Z'))
+      	{
+        	printf("valid input.\n");
+        	valid_surname = 1;
+      	}
+      	else
+      	{
+        	printf("invalid input.\n");
+        	valid_surname = 0;
+			break;
+      	}
 	}
 
+  	if((patient_lib[count].firstname[0] >= 'A')
+     &&(patient_lib[count].firstname[0] <= 'Z'))
+	{
+		for (j=1; j < lenF; j++)
+  		{
+      		if((patient_lib[count].firstname[j] >= 'a')
+         	 &&(patient_lib[count].firstname[j] <= 'z'))
+     	 	{
+       			printf("valid input.\n");
+        		valid_firstname = 1;
+      		}
+      		else
+      		{
+        		printf("invalid input.\n");
+        		valid_firstname = 0;
+      		}
+  		}
+	}
+	/* AND logic both return values. If both true (1), then return 1, else return 0 */
+	valid_fullname = valid_surname && valid_firstname;
+	return valid_fullname;
+}	
+/*******************************************************************************
+ * This function encrypts and decrypts the string from the text file
+ * 
+ * inputs:
+ * - 
+ * outputs:
+ * - none
+*******************************************************************************/
+int valid_time_info(date_time_t date_time_dt)
+{
+    int valid_tinfo;
+  	if ((date_time_dt.year < 2016)||(date_time_dt.year > 2020)
+	  ||(date_time_dt.month < 1)||(date_time_dt.month > 12)
+	  ||(date_time_dt.day < 1)||(date_time_dt.day > 31)
+	  ||(date_time_dt.hour < 0 )||(date_time_dt.hour > 23)
+	  ||(date_time_dt.minute < 0)||(date_time_dt.minute > 59))
+	 {
+   		printf("invalid input.\n");
+		valid_tinfo = 0;
+	 }
+	 else
+	 {
+		 printf("valid input.\n");
+		 valid_tinfo = 1;
+	 }
+	 return valid_tinfo;
+}
+/*******************************************************************************
+ * This function encrypts and decrypts the string from the text file
+ * 
+ * inputs:
+ * - 
+ * outputs:
+ * - none
+*******************************************************************************/
+int valid_measuremet(patient_t measure_dt)
+{
+    int valid_measure;
+  	if ((measure_dt.age < 0)||(measure_dt.age > 150)||
+     	(measure_dt.weight < 0)||(measure_dt.weight > 250)||
+     	(measure_dt.height < 0)||(measure_dt.height > 250))
+	{
+    	printf("invalid input.\n");
+		valid_measure = 0;
+	}
+  	else
+    {
+      	printf("valid input.\n");
+		valid_measure = 1;
+    }
+	return valid_measure;
+}
+/*******************************************************************************
+ * This function encrypts and decrypts the string from the text file
+ * 
+ * inputs:
+ * - 
+ * outputs:
+ * - none
+*******************************************************************************/
+int valid_medicine(medicine_t medicine_dt)
+{
+    int valid_medicine;
 
+ 	if ((medicine_dt.times < 1)||(medicine_dt.times > 6)||
+    	(medicine_dt.dose < 1)||(medicine_dt.dose > 500)||
+        (medicine_dt.name <= 'A')||(medicine_dt.name >= 'Z')||
+     	(medicine_dt.dose < 1)||(medicine_dt.dose > 200))
+    {
+		printf("invalid input.\n");
+		valid_medicine = 0;
+	}
+  	else
+    {
+      	printf("valid input.\n");
+	 	 valid_medicine = 1;
+    }
+    printf("valid_medicine value is %d.\n", valid_medicine);
+	return valid_medicine;
+}
+/*******************************************************************************
+ * This function encrypts and decrypts the string from the text file
+ * 
+ * inputs:
+ * - 
+ * outputs:
+ * - none
+*******************************************************************************/
+int valid_location(location_t location_dt)
+{
+    int lenD, i, valid_location;
+  	lenD = strlen(location_dt.department);
 
-
-
+	for (i=0; i < lenD; i++)
+  		{
+   			if((location_dt.department[i] <= 'A')
+             ||(location_dt.department[i] >= 'Z')
+             ||(location_dt.level < 0)||(location_dt.level > 5)
+             ||(location_dt.room < 0)||(location_dt.room > 200))
+			{
+				printf("invalid input.\n");
+				valid_location = 0;
+				break;
+			}
+   			else
+			{
+    			printf("valid input.\n");
+				valid_location = 1;
+ 			}
+		}
+		printf("valid location value: %d.\n", valid_location);
+		return valid_location;
 }
