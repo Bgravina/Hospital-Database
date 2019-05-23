@@ -94,7 +94,7 @@
 /*******************************************************************************
 	Macros
 *******************************************************************************/
-#define MAX_NUM_PATIENTS 100
+#define MAX_NUM_PATIENTS 3
 #define MAX_DEPARTMENT_LEN 20
 #define MAX_LEVEL_LEN 2
 #define MAX_ROOM_LEN 3
@@ -175,7 +175,8 @@
 	Database prototypes: Main prototypes used for managing database.
 ==============================================================================*/
 	int logon(); 					/* returns 1 if valid, else 0 for invalid */
-	void print_login_menu();
+	void print_title();
+	void print_login();
 	void print_menu(void); 				  /* displays menu for user selection */
 	void print_location();
 	void add_patient(patient_t patient_lib[], int count);
@@ -212,6 +213,30 @@ int main(void)
 	int choice = 0, count = 0;
 	patient_t patient_lib[MAX_NUM_PATIENTS];
 
+	print_title();
+
+	while(choice != 1)
+	{
+
+		print_login();
+		scanf("%d", &choice);
+		switch(choice)
+       	{	
+       		case 1:
+				break;
+       
+	    	case 2:
+	    		printf("Exiting program...\n");
+	    		return 0;  
+		
+			default: 
+				printf("Invalid choice\n");	
+				printf("Please enter number 1 or 2 \n");	
+		}
+	}
+
+
+
     while(choice != 6)
     {
         print_menu();
@@ -240,13 +265,13 @@ int main(void)
                 break;
             case 4:
                 printf("Saving patient info...\n");
-                encrypt_decrypt(patient_lib, count); 
+                /*encrypt_decrypt(patient_lib, count); */
                 save_patient(patient_lib, count);
                 break;
             case 5:
                 printf("Loading patient info...\n");
                 count = load_patient(patient_lib, count);
-                encrypt_decrypt(patient_lib, count); 
+                /* encrypt_decrypt(patient_lib, count); */
                 break;
             case 6:
                 printf("Exiting program...\n");
@@ -265,6 +290,14 @@ int main(void)
 /*******************************************************************************
 	Function Definitions
 *******************************************************************************/
+void print_title()
+{
+	printf("***************************************\n");
+    printf(" WELLCOME TO THE HOSPITAL DATABASE \n");
+    printf("***************************************\n");
+}
+
+
 void print_login()
 {
   	printf("\n"
@@ -954,8 +987,8 @@ int valid_department(location_t location_dt)
 
 	for (i=0; i < lenD; i++)
   		{
-   			if((location_dt.department[i] <= 'A')
-             ||(location_dt.department[i] >= 'Z'))
+   			if((location_dt.department[i] < 'A')
+             ||(location_dt.department[i] > 'Z'))
 			{
 				printf("invalid input.\n");
 				valid = 0;
@@ -1018,3 +1051,9 @@ int valid_room(location_t location_dt)
 	}
 	 return valid;
 }
+
+
+
+
+
+
