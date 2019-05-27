@@ -10,7 +10,6 @@ int main(void){
 	int i, j, k; 
 	int length; 
 	int countdup;
-
 /* enter the string needed for decompress */	
 	printf("Enter a string >\n");
 	scanf("%s", password);
@@ -20,7 +19,9 @@ int main(void){
 	
 	
 /* as the string is a combination of characters and '\0' at the end */
-/* the program will compare the first digit with the one next to it, including '\0' */
+
+/* the program will compare the first digit 
+with the one next to it, including '\0' */
 	
 	
 	
@@ -38,7 +39,9 @@ int main(void){
 				/* when that number is greater than 1 */
 				if ( x > 1)
 				{
-					/* printing the digit corresponding to the number after it */
+					
+				 /* printing the digit corresponding to the number after it */
+				 
 					for( k = 0 ; k < x  ; k ++ )
 					{
 						printf("%c", password[i]);
@@ -47,12 +50,20 @@ int main(void){
 				}
 				
 			}
-			/* when their is a word after a digit, the program will look at that and the end to determine to print the word within */ 
-			else if (  (password[i] <= '0' || password[i] >= '9') || ( (password[j] <= '0' || password[j] >= '9') && ( password [j] != 0) &&( password [i] == 0) ) )
+			
+			/* when their is a word after a digit, 
+    the program will look at that and the end to determine to print the word */
+	 
+			else if ( (password[i] <= '0' || password[i] >= '9') || 
+					( (password[j] <= '0' || password[j] >= '9') && 
+					( password [j] != 0) &&( password [i] == 0) ) )
 			{
 					printf("%c", password[i]);
 			}
-			/* increment the comparasion digit as it should be comparing between every single one */
+			
+			/* increment the comparasion digit as it should be 
+			comparing between every single one */
+			
 			i = i + 1;
 				
 			
