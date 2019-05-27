@@ -17,14 +17,18 @@ int main(void){
 /* get the length of the string */	
 	length = strlen(password);
 	
-/* as the string is a combination of characters and '\0' at the end *
-/* the program will compare the first digit with the one next to it, including '\0' */
+/* as the string is a combination of characters and '\0' at the end */
+
+/* the program will compare the first digit with the one next to it, 
+including '\0' */
 
 	
 	for( i= 0; i < length ; i++)
 	{		
 		/* the duplicate is set to 1 */
-		/* it will start counting if the next one is the same as the previous one and set coundup to 2 */
+		
+		/* it will start counting if the next one is the same as 
+		the previous one and set coundup to 2 */
 		countdup = 1;
 	
 		for(j = i + 1; j < length + 1; j++ )
@@ -43,8 +47,11 @@ int main(void){
 			{	
 				/* print out the digit */				
 				printf("%c", password[i]);
-				/* if the digit is more than one, the program will print the number after it*/
-				/* otherwise, it will just print the digit it self if there is no duplicate */
+				/* if the digit is more than one, 
+				the program will print the number after it*/
+				
+				/* otherwise, it will just print the digit it self 
+				if there is no duplicate */
 				if(countdup > 1)
 				{
 					printf("%d", countdup);
