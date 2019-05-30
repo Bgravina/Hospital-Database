@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<string.h>
+
+/* Sorting strings in alphabetical order */
+
+int main() {
+	/* two dimensional array storing the strings */ 
+	char s[100][100];
+	/* temporary array acts as a destination, used for swapping the strings */
+	char t[100];
+	int i, j;
+	int comp;
+
+ printf("type 5 strings you want to sort out :>\n");
+/* type down the strings wanted to sort, change i depending on the number of
+	strings needed */
+   for (i = 0; i < 5; i++)
+   {
+      scanf("%s", s[i]); 
+	}
+/* comparing each string with the one next to it */ 
+   for (i = 1; i < 5; i++) 
+   {
+      for (j = 1; j < 5; j++) 
+	  {
+	  	/* strcmp for comparing the ascii value of each characters to determine
+	  	which one is greater */
+	  	int comp = strcmp(s[j - 1], s[j]);
+	  	/* when the result is positive integrer */
+        if ( comp > 0) {
+        	/* copy the string into a temporary array */
+            strcpy(t, s[j - 1]);
+            /* replace the string with the one it was comprared with */
+            strcpy(s[j - 1], s[j]);
+            /* copy the value from the temporary to replace the other string */
+            strcpy(s[j], t);
+         }
+      }
+   }
+/* As the results, the strings are sorted out and replaced if needed */
+   printf("The sorted array is:");
+    for (i = 0; i < 5; i++)
+	{ 
+   	printf("\n%s", s[i]); 
+   	}
+   	
+   return(0);
+}
