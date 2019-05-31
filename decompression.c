@@ -10,6 +10,8 @@ int main(void){
 	int i, j, k; 
 	int length; 
 	int countdup;
+	int storedup;
+
 /* enter the string needed for decompress */	
 	printf("Enter a string >\n");
 	scanf("%s", password);
@@ -44,7 +46,16 @@ with the one next to it, including '\0' */
 				 
 					for( k = 0 ; k < x  ; k ++ )
 					{
+						/*save the password[i] into the variable */
 						printf("%c", password[i]);
+						
+						/* store the value to a different string */
+						storepassword[storedup]=password[i];
+						
+						/* increment so when it comes to the next value, 
+						it will be saved into the next digit next 
+						to the one just being stored */
+						storedup++;
 					}
 				
 				}
@@ -59,6 +70,16 @@ with the one next to it, including '\0' */
 					( password [j] != 0) &&( password [i] == 0) ) )
 			{
 					printf("%c", password[i]);
+					
+					/* store the value to a different string */
+					storepassword[storedup]=password[i];
+					
+					/* increment so when it comes to the next value, 
+					it will be saved into the next digit next 
+					to the one just being stored */
+					storedup++;
+					
+			
 			}
 			
 			/* increment the comparasion digit as it should be 
@@ -70,8 +91,8 @@ with the one next to it, including '\0' */
 		}
 	}
 	
-
-
+printf("\n");
+printf("the stored string is : %s", storepassword);
 	
 
 	
