@@ -194,6 +194,9 @@
 	/* Sorts patient's in alphabetical order */
 	void bubble_sort(patient_t patient_lib[], int count);
 
+	/* User enters login details */
+	void print_enter_login(debug_t debug);
+
 	/* Swaps int data types using pointers */
 	void swap_int(int *xp, int *yp); 
 
@@ -207,11 +210,16 @@
 	updating patient's information
 ==============================================================================*/
 	void patient_name(patient_t patient_lib[], int count, debug_t debug);
-	void patient_measurements(patient_t patient_lib[], int count, debug_t debug);
-	void patient_arrival_time(patient_t patient_lib[], int count, debug_t debug);
-	void patient_location(patient_t patient_lib[], int count, debug_t debug);
-	void patient_medication(patient_t patient_lib[], int count, debug_t debug);
-	void patient_depature_time(patient_t patient_lib[], int count, debug_t debug);
+	void patient_measurements(patient_t patient_lib[], 
+								int count, debug_t debug);
+	void patient_arrival_time(patient_t patient_lib[], 
+								int count, debug_t debug);
+	void patient_location(patient_t patient_lib[], 
+								int count, debug_t debug);
+	void patient_medication(patient_t patient_lib[], 
+								int count, debug_t debug);
+	void patient_depature_time(patient_t patient_lib[], 
+								int count, debug_t debug);
 
 
 /*==============================================================================
@@ -228,6 +236,7 @@
 	int valid_med(diagnosis_t diagnosis, debug_t debug);
 	int valid_med_time(diagnosis_t diagnosis, debug_t debug);
 	int valid_med_dosage(diagnosis_t diagnosis, debug_t debug);
+	int valid_login(char id[], char password[], debug_t debug);
 
 /*==============================================================================
 	Request patients location within hospital. This allows nurses to be aware
@@ -268,7 +277,10 @@ int main(void)
        	{	
        		/* This case lets the user login */
        		case 1:
-				debug.login_count++;
+				/* User defined function to allow the user to enter
+				their login details */
+       			print_enter_login(debug);
+       			debug.login_count++;
 				break;
        
        		/* This case lets the user log out of the program */
@@ -392,7 +404,7 @@ int main(void)
             case 6:
             	/* Informs the user they're exiting the program */
                 printf("Exiting program...\n");
-
+                print_debug(debug);
                 break;
 
             /* The default case for when the user inputs an invalid input */
@@ -496,6 +508,91 @@ void print_update_menu(void)
 
 
 /*******************************************************************************
+ * print_enter_login
+ * This function request the user to enter ID and Password to login to the
+ * program
+ * 
+ * inputs:
+ * - none
+ * 
+ * outputs:
+ * - none
+*******************************************************************************/
+void print_enter_login(debug_t debug)
+{
+	char id[MAX_ID_LEN+1];
+	char password[MAX_PASS_LEN+1];
+
+	do
+	{
+		printf("Enter user id and password seperated by a space\n");
+		scanf("%s %s", id, password);
+	} while(valid_login(id, password, debug) == 0);
+}
+
+
+/*******************************************************************************
+ * valid_login
+ * This function checks if the user's login details is correct
+ *
+ * inputs:
+ * - id:
+ * - password:
+ * - debug: 
+ *			
+ * outputs:
+ * - valid/invalid input returned as an int (1 = valid, 0 = invalid)
+*******************************************************************************/
+int valid_login(char id[], char password[], debug_t debug)
+{
+	/* Delcares variable that determines if the user's input is valid
+    or not */
+	int valid;
+	
+	char adminid[]="ADMIN";
+	char adminpassword[]="PASSWORD";
+	
+	int idvalid = strcmp(id, adminid);
+	int passvalid = strcmp(password, adminpassword);
+
+	/* Condition to check if the value entered is invalid */
+	if (idvalid != 0)
+    {
+		/* Informs the user that the input is invalid */
+		printf("invalid input.\n");
+		
+		/* Stores a 0 in the validation check which indicates the input
+        is invalid */
+		valid = 0;
+		/* Increments counter for number of login attempts */
+		debug.login_count++;
+	}
+  	else if  (passvalid != 0)
+    {
+		/* Informs the user that the input is invalid */
+		printf("invalid input.\n");
+		
+		/* Stores a 0 in the validation check which indicates the input
+        is invalid */
+		valid = 0;
+		/* Increments counter for number of login attempts */
+		debug.login_count++;
+	}
+
+	/* If condition is not met, then the value entered is valid */
+  	else 
+    {
+	 	/*Stores a value of 1 in the validation check, which indicates the
+		input is valid */
+	 	valid = 1;
+    }
+
+	/* Returns the value stored in the validation check */
+	return valid;
+}
+
+
+/*******************************************************************************
  * patient_name
  * This function request patients surname and first name. 
  * 
@@ -511,8 +608,8 @@ void print_update_menu(void)
 *******************************************************************************/
 void patient_name(patient_t patient_lib[], int count, debug_t debug)   
 {    
-    printf("Enter their surname in all uppercase, then their first name "
-            "with the first letter in uppercase and the rest of the letters " 
+    printf("Enter their surname in all uppercase, then their first name\n"
+            "with the first letter in uppercase and the rest of the letters\n" 
             "in lowercase, seperated by a space> \n");
     
     /* Loops scanf function till a valid input is entered by the user */
@@ -841,8 +938,8 @@ void update_patient(patient_t patient_lib[], int count, debug_t debug)
 
     /* Request the user to input patient's last name or * to display all
     patients stored */
-    printf("Enter their surname in all uppercase, then their first name "
-            "with the first letter in uppercase and the rest of the letters " 
+    printf("Enter their surname in all uppercase, then their first name\n"
+            "with the first letter in uppercase and the rest of the letters\n" 
             "in lowercase, seperated by a space> \n");
 
     /* Stores user's input to determine whether to display all patients or
@@ -1024,10 +1121,32 @@ void display_patient(patient_t patient_lib[], int count, debug_t debug)
 
         	/* Displays the patient's prescribed medicine in one line */
         	printf("Prescribed Medicine: ");
-        	printf("%s %dmg %d times per day\n\n", 
+        	printf("%s %dmg %d times per day\n", 
         						patient_lib[i].diagnosis.med,
         						patient_lib[i].diagnosis.dose,
         						patient_lib[i].diagnosis.times);
+
+        	/* Display depature information if patient has been
+        	discharged */
+        	if ((patient_lib[i].departure_dt.day == 0) &&
+        		(patient_lib[i].departure_dt.month == 0) &&
+        		(patient_lib[i].departure_dt.year == 0) &&
+        		(patient_lib[i].departure_dt.hour == 0) &&
+        		(patient_lib[i].departure_dt.minute == 0))
+        	{
+        		printf("Discharged on ");
+        		printf("%02d/%02d/%d at %02d:%02d\n\n", 
+        							patient_lib[i].departure_dt.day,
+        							patient_lib[i].departure_dt.month,
+        							patient_lib[i].departure_dt.year,
+        							patient_lib[i].departure_dt.hour,
+        							patient_lib[i].departure_dt.minute);
+        	}
+
+        	else
+        	{
+        		printf("\n");
+        	}
         }
     }
 
@@ -1074,6 +1193,28 @@ void display_patient(patient_t patient_lib[], int count, debug_t debug)
         						patient_lib[i].diagnosis.med,
         						patient_lib[i].diagnosis.dose,
         						patient_lib[i].diagnosis.times);
+
+        		/* Display depature information if patient has been
+        		discharged */
+        		if ((patient_lib[i].departure_dt.day == 0) &&
+        		(patient_lib[i].departure_dt.month == 0) &&
+        		(patient_lib[i].departure_dt.year == 0) &&
+        		(patient_lib[i].departure_dt.hour == 0) &&
+        		(patient_lib[i].departure_dt.minute == 0))
+        		{
+        			printf("Discharged on ");
+        			printf("%02d/%02d/%d at %02d:%02d\n\n", 
+        							patient_lib[i].departure_dt.day,
+        							patient_lib[i].departure_dt.month,
+        							patient_lib[i].departure_dt.year,
+        							patient_lib[i].departure_dt.hour,
+        							patient_lib[i].departure_dt.minute);
+        		}
+
+        		else
+        		{
+        			printf("\n");
+        		}
 
         		/*Increments display variable by 1 */
         		display++;
@@ -1404,7 +1545,7 @@ void encrypt_decrypt(patient_t patient_lib[], int count)
 int valid_fullname(patient_t patient_lib[],int count, debug_t debug)
 {
     /* Delcares variable for the loops in this function */
-    int i, valid_fullname_count;
+    int i;
     	
     /* Declares variable for the length of the patient's surname and
     first name */
@@ -1941,7 +2082,8 @@ void print_debug(debug_t debug)
            debug.valid_med_dose_count,
            debug.valid_med_dose_count,
            debug.valid_level_count,
-           debug.valid_room_count
+           debug.valid_room_count,
+           debug.valid_department_count
            );
 }
 
