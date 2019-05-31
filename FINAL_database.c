@@ -42,23 +42,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-/*******************************************************************************
-	Macros
-*******************************************************************************/
-#define MAX_NUM_PATIENTS 100
-#define MAX_DEPARTMENT_LEN 20
-#define MAX_LEVEL_LEN 2
-#define MAX_ROOM_LEN 3
-#define MAX_ROOM 200
-#define	MAX_MED_LEN 20
-#define MAX_NAME_LEN 20
-#define MAX_ID_LEN 6
-#define MAX_PASS_LEN 16
-#define LEVEL_MIN 0         /* Min level of hospital, can be changed according
-                               to hospital */
-#define LEVEL_MAX 5         /* Max level of hospital, can be changed according
-                               to hospital */
-#define KEY 'K'				/* Key for encrypting and decrypting data */
+#include "header.h"
 /*******************************************************************************
 	Structures
 	Patient (array library)
@@ -202,6 +186,12 @@
 
 	/* Debug */
 	void print_debug(debug_t debug);
+	
+	/* Compression */
+	void compression (patient_t patient_lib[], int count);
+	
+	/* Decompression */
+	void decompression (patient_t patient_lib[], int count);
 
 
 
@@ -2227,3 +2217,200 @@ void swap_int(int *xp, int *yp)
     *yp = temp_int; 
 } 
 
+
+/*******************************************************************************
+ * This function compresses the surname of each patient, save it into 
+ a temporary string and from that string, the compressed string will be 
+ copied back into the original one.   
+*******************************************************************************/
+
+void compression (patient_t patient_lib[], int count)
+{
+	/* the temporary string storing the full string of surname */
+	char getsurname[MAX_NAME_LEN + 1];
+	/* the temporary string storing the compressed string */
+	char storesurname[MAX_NAME_LEN + 1];
+	
+	int k, h, i; 
+	int length;
+	int length1; 
+	int countdup;
+	int storedup;
+	
+	
+	
+
+  for( i = 0; i<count; i++ )
+  {
+	/* get the length of the patient surname */
+	length = strlen(patient_lib[i].surname);
+	/* copy the full surname into a temporary string */
+	strcpy(getsurname, patient_lib[i].surname);
+	/* loop compressing the temporary string which has the value of surname */
+	for( k= 0; k < length ; k++)
+	{		
+		/* the duplicate is set to 1 */
+		
+		/* it will start counting if the next one is the same as 
+		the previous one and set coundup to 2 */
+		countdup = 1;
+		for(h = k + 1; h < length + 1; h++ )
+		{
+		
+			/* when the digit is the same as the digit next to it */
+			if(getsurname[k] == getsurname[h])
+			{
+				/* increase the countdup if there is a duplicate digit */
+				countdup++;
+				
+				/* make the comprared digit '\0' */
+				getsurname[h] = '0';
+				
+			
+			}				
+			/* when two digit is different */	
+			else if ( getsurname[k]!='0' && getsurname[k] != getsurname[h])
+			{	
+				
+					
+				/* store the value to a different string */
+				storesurname[storedup]=getsurname[k];
+				
+				/* increment so when it comes to the next value, 
+				it will be saved into the next digit next 
+				to the one just being stored */
+				storedup++;
+				
+			
+				/* if the digit is more than one, 
+				the program will print the number after it*/
+				
+				/* otherwise, it will just print the digit it self 
+				if there is no duplicate */
+				if(countdup > 1 )
+				{
+					
+					
+				/* convert countdup from integer to character */
+				
+					char countdup1 = countdup + '0';
+					
+				/* store the value of countdup to the string, 
+					next to the duplicated digits */
+						
+					storesurname[storedup]=countdup1;
+					
+				/* go to the next digit in the string after saving countdup */	
+					storedup++;
+					
+				}
+				
+				getsurname[k] = '0';
+			
+								
+			}
+				
+		}
+		
+		
+	}
+	/* copy the compressed string back to replace the original string */
+ 	strcpy(patient_lib[i].surname, storesurname);
+ 	
+	
+  }
+  
+}
+
+/*******************************************************************************
+ * This function decompresses the surname of each patient, save it into 
+ a temporary string and from that string, the decompressed string will be 
+ copied back into the original one.   
+*******************************************************************************/
+
+ void decompression (patient_t patient_lib[], int count)
+{
+	/* the temporary string storing the full string of surname */
+	char getsurname[MAX_NAME_LEN + 1];
+	/* the temporary string storing the compressed string */
+	char storesurname[MAX_NAME_LEN + 1];	
+	int i, n, j, k; 
+	int length; 
+	int countdup;
+	int storedup;
+	
+	for( i = 0; i<count; i++ )
+    {	
+      /* get the length of the patient surname */
+	  length = strlen(patient_lib[i].surname);
+	  /* copy the full surname into a temporary string */
+	  strcpy(getsurname, patient_lib[i].surname);
+	  /* loop compressing the temporary string which has the value of surname*/
+	  for( n= 0; n < length ; n++)
+	  {		
+
+		for(j = n + 1; j < length + 1; j++ )
+		{
+			/* if the digit needed to compare is a number after a word */ 
+			if(  (getsurname[j] >= '0') && (getsurname[j] <= '9' ))
+			{
+				/* change the number in the string into a single number */
+				int x = getsurname[j] - '0';
+				/* when that number is greater than 1 */
+				if ( x > 1)
+				{
+					
+				 /* printing the digit corresponding to the number after it */
+				 
+					for( k = 0 ; k < x  ; k ++ )
+					{
+						/*save the password[i] into the variable */
+				
+						
+						/* store the value to a different string */
+						storesurname[storedup]=getsurname[n];
+						
+						/* increment so when it comes to the next value, 
+						it will be saved into the next digit next 
+						to the one just being stored */
+						storedup++;
+					}
+				
+				}
+				
+			}
+			
+			/* when their is a word after a digit, 
+    the program will look at that and the end to determine to print the word */
+	 
+			else if ( (getsurname[n] <= '0' || getsurname[n] >= '9') || 
+					( (getsurname[j] <= '0' || getsurname[j] >= '9') && 
+					( getsurname [j] != 0) &&( getsurname [n] == 0) ) )
+			{
+					
+					
+					/* store the value to a different string */
+					storesurname[storedup]=getsurname[n];
+					
+					/* increment so when it comes to the next value, 
+					it will be saved into the next digit next 
+					to the one just being stored */
+					storedup++;
+					
+			
+			}
+			
+			/* increment the comparasion digit as it should be 
+			comparing between every single one */
+			
+			n = n + 1;
+				
+			
+		}
+	}
+	/* copy the compressed string back to replace the original string */
+	strcpy(patient_lib[i].surname, storesurname);
+
+} 
+
+}
