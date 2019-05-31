@@ -1128,11 +1128,11 @@ void display_patient(patient_t patient_lib[], int count, debug_t debug)
 
         	/* Display depature information if patient has been
         	discharged */
-        	if ((patient_lib[i].departure_dt.day == 0) &&
-        		(patient_lib[i].departure_dt.month == 0) &&
-        		(patient_lib[i].departure_dt.year == 0) &&
-        		(patient_lib[i].departure_dt.hour == 0) &&
-        		(patient_lib[i].departure_dt.minute == 0))
+        	if ((patient_lib[i].departure_dt.day != 0) &&
+        		(patient_lib[i].departure_dt.month != 0) &&
+        		(patient_lib[i].departure_dt.year != 0) &&
+        		(patient_lib[i].departure_dt.hour != 0) &&
+        		(patient_lib[i].departure_dt.minute != 0))
         	{
         		printf("Discharged on ");
         		printf("%02d/%02d/%d at %02d:%02d\n\n", 
@@ -1196,11 +1196,11 @@ void display_patient(patient_t patient_lib[], int count, debug_t debug)
 
         		/* Display depature information if patient has been
         		discharged */
-        		if ((patient_lib[i].departure_dt.day == 0) &&
-        		(patient_lib[i].departure_dt.month == 0) &&
-        		(patient_lib[i].departure_dt.year == 0) &&
-        		(patient_lib[i].departure_dt.hour == 0) &&
-        		(patient_lib[i].departure_dt.minute == 0))
+        		if ((patient_lib[i].departure_dt.day != 0) &&
+        		(patient_lib[i].departure_dt.month != 0) &&
+        		(patient_lib[i].departure_dt.year != 0) &&
+        		(patient_lib[i].departure_dt.hour != 0) &&
+        		(patient_lib[i].departure_dt.minute != 0))
         		{
         			printf("Discharged on ");
         			printf("%02d/%02d/%d at %02d:%02d\n\n", 
