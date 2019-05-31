@@ -1692,6 +1692,11 @@ void bubble_sort(patient_t patient_lib[], int count)
                 swap_int(&patient_lib[j-1].location_dt.level, &patient_lib[j].location_dt.level);
                 swap_int(&patient_lib[j-1].location_dt.room, &patient_lib[j].location_dt.room);
 
+
+                swap_int(&patient_lib[j-1].diagnosis.times, &patient_lib[j].diagnosis.times);
+                swap_int(&patient_lib[j-1].diagnosis.dose, &patient_lib[j].diagnosis.dose);
+
+
                 swap_int(&patient_lib[j-1].departure_dt.day, &patient_lib[j].departure_dt.day);
                 swap_int(&patient_lib[j-1].departure_dt.month, &patient_lib[j].departure_dt.month);
                 swap_int(&patient_lib[j-1].departure_dt.year, &patient_lib[j].departure_dt.year);
@@ -1726,11 +1731,11 @@ void bubble_sort(patient_t patient_lib[], int count)
 
             
                 /* copy the string into a temporary array */
-                strcpy(temp_string, patient_lib[j-1].location_dt.department);
+                strcpy(temp_string, patient_lib[j-1].diagnosis.med);
                 /* replace the string with the one it was comprared with */
-                strcpy(patient_lib[j-1].location_dt.department, patient_lib[j].location_dt.department);
+                strcpy(patient_lib[j-1].diagnosis.med, patient_lib[j].diagnosis.med);
                 /* copy the value from the temporary to replace the other string */
-                strcpy(patient_lib[j].location_dt.department, temp_string);
+                strcpy(patient_lib[j].diagnosis.med, temp_string);
          
             }
         }
