@@ -144,6 +144,9 @@
 		int valid_level_count;
 		int valid_room_count;
 		int display_patient_count;
+		int update_patient_count;
+		int save_patient_count;
+		int load_patient_count;
 	};
 	typedef struct debug debug_t;	
 
@@ -265,6 +268,7 @@ int main(void)
        	{	
        		/* This case lets the user login */
        		case 1:
+				debug.login_count++;
 				break;
        
        		/* This case lets the user log out of the program */
@@ -336,7 +340,7 @@ int main(void)
 
                 /* User defined function to display patient(s) information */
                 display_patient(patient_lib, count, debug);
-
+		debug.display_patient_count++;
                 break;
 
             /* This case allows the user to update a particular patient's
@@ -347,6 +351,7 @@ int main(void)
 
                 /* User defined function to update patient's information */
                 update_patient(patient_lib, count, debug);
+		debug.update_patient_count++;
 
                 break;
 
@@ -365,7 +370,7 @@ int main(void)
                 /* Decrypts the data so it can be displayed correctly if
                 display patients is selected afterwards */
                 encrypt_decrypt(patient_lib, count);
-
+		debug.save_patient_count++;
                 break;
             
             /* This case allows the user to load the patients' information
@@ -380,7 +385,7 @@ int main(void)
 
                 /* Decrpts the data that was loaded */
                 encrypt_decrypt(patient_lib, count);
-
+		debug.load_patient_count++;
                 break;
 
             /* This case allows the user to exi the program */    
@@ -389,14 +394,6 @@ int main(void)
                 printf("Exiting program...\n");
 
                 break;
-
-
-            /* This case is for displaying debug information */    
-            case 7:
-            	printf("Displaying debug info...\n");
-            	print_debug(debug);
-            	break;
-	
 
             /* The default case for when the user inputs an invalid input */
             default:
@@ -471,8 +468,7 @@ void print_menu(void)
     "4. Save the patients to the database file\n"
     "5. Load the patients from the database file\n"
     "6. Exit the program\n"
-    "7. Debug information\n"
-    "Enter choice (number between 1-7)>\n");
+    "Enter choice (number between 1-6)>\n");
 }
 
 
@@ -1408,7 +1404,7 @@ void encrypt_decrypt(patient_t patient_lib[], int count)
 int valid_fullname(patient_t patient_lib[],int count, debug_t debug)
 {
     /* Delcares variable for the loops in this function */
-    int i;
+    int i, valid_fullname_count;
     	
     /* Declares variable for the length of the patient's surname and
     first name */
@@ -1435,7 +1431,7 @@ int valid_fullname(patient_t patient_lib[],int count, debug_t debug)
         	/* Stores a 0 in the validation check which indicates the input
         	is invalid */
         	valid_fullname = 0;
-			debug.valid_fullname_count++;
+		debug.valid_fullname_count++;
 
         	/* Returns the value of the invalid input indicator */
         	return valid_fullname;
@@ -1900,28 +1896,53 @@ void print_debug(debug_t debug)
 	printf("================================================================");
 	printf("\nThis is the program run data\n");
 	printf("================================================================");
-	
+
 	printf("\nThere was %d login attempts.\n", debug.login_count);
 /*******************************************************************************/
-	printf("\nThe add patient function was used %d times.\n", debug.add_patient_count);
-	printf("\nWithin the add patient function, the following bugs occured:\n");
-	printf("================================================================");
-	printf("\nPatients fullname was entered incorrectly %d times.\n", debug.valid_fullname_count);
-	printf("\nPatients arrival/depature time was entered incorrectly %d times.\n", debug.valid_time_count);
-	printf("\nPatients age, weight or height was entered incorrectly %d times.\n", debug.valid_measure_count);
-	printf("\nPatients medicine information was entered incorrectly %d times.\n", debug.valid_med_count);
-	printf("\nPatients medicine times per day information was entered incorrectly %d times.\n", debug.valid_med_time_count);
-	printf("\nPatients medicine dosage was entered incorrectly %d times.\n", debug.valid_med_dose_count);
-	printf("\nPatients department location was entered incorrectly %d times.\n", debug.valid_department_count);
-	printf("\nPatients level location was entered incorrectly %d times.\n", debug.valid_level_count);
-	printf("\nPatients room location was entered incorrectly %d times.\n", debug.valid_room_count);
-	printf("================================================================");
-/*****************************************************************************/
-	printf("\nThe display patient function was used %d times.\n", debug.display_patient_count);
-	printf("\nWithin the display patient function, the following bugs occured:\n");
-	printf("================================================================");
-	printf("Invalid");
+	printf("--- Menu Selection usage ---\n");
+	printf("Add patient:     |  %d\n"
+           "Display patient: |  %d\n"
+           "Update patient:  |  %d\n"
+           "Save patient:    |  %d\n"
+           "Load patient:    |  %d\n\n",
+           debug.add_patient_count,
+           debug.display_patient_count,
+           debug.update_patient_count,
+           debug.save_patient_count,
+           debug.load_patient_count);
 
+    printf("--- Patient Information Bug Count ---\n\n");
+    printf("      Input      |Error Count\n");
+    printf("-----------------|-----------\n");
+    printf("    Full Name    |     %d    \n"
+           "-----------------|-----------\n"
+           "     Arrival     |     %d    \n"
+           "-----------------|-----------\n"
+           "  Age/Hght/Wght  |     %d    \n"
+           "-----------------|-----------\n"
+           "    Med Info     |     %d    \n"
+           "-----------------|-----------\n"
+           "    Med times    |     %d    \n"
+           "-----------------|-----------\n"
+           "    Med dosage   |     %d    \n"
+           "-----------------|-----------\n"
+           "    Department   |     %d    \n"
+           "-----------------|-----------\n"
+           "      Level      |     %d    \n"
+           "-----------------|-----------\n"
+           "      Room       |     %d    \n"
+           "-----------------|-----------\n"
+           "    Department   |     %d    \n\n",
+           debug.valid_fullname_count,
+           debug.valid_time_count,
+           debug.valid_measure_count,
+           debug.valid_med_count,
+           debug.valid_med_time_count,
+           debug.valid_med_dose_count,
+           debug.valid_med_dose_count,
+           debug.valid_level_count,
+           debug.valid_room_count
+           );
 }
 
 
